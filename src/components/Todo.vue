@@ -3,7 +3,7 @@
     <h1>Selamat Datang</h1>
     <div>Berikut daftar kerja kita:</div>
     <ul>
-      <li v-for="item in todos" :key="item.id">{{item.catatan}}</li>
+      <li v-for="(item,idx) in todos" :key="item.id">{{item.catatan}}  <button @click="hapus(item.id,idx)">Delete</button></li>
     </ul>
     <input v-model="myText">
     <button @click="tambahkan">Klik Me</button>
@@ -30,16 +30,19 @@ export default{
   },
   methods:{
     tambahkan: function(){
-      let newItem = {todo: this.myText}
+      let newItem = {catatan: this.myText}
       axios.post('http://localhost:3000/todo', newItem)
-      this.todos.push({catatan: this.myText})
+      this.todos.push(newItem)
+    },
+    hapus:function(id,idx){
+      axios.delete(`http://localhost:3000/todo/${id}`);
+      this.todos.splice(idx,1);
     }
-    // hapus: function(id){
-    //   axios.delete('http://localhost:3000/todo/${id}')
-    //   //belum ada
-    //   //tugas delete
-    //   //menghapus tampilan yang didelete
-    // }
   }
 }
 </script>
+<style scoped>
+  ul li{
+    margin-top: 10px;
+  }
+</style>
