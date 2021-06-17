@@ -2,30 +2,31 @@
     <div>
         <h3>Login</h3>
         <label>username </label>
-        <input v-model="userName">
+        <input type="text" v-model="userName">
         <br><br>
         <label>password </label>
-        <input v-model="Password">
+        <input type="password" v-model="Password">
         <br><br>
         <button @click="loginMasuk">login</button>
+        &nbsp;&nbsp;
+        <button @click="logout">logout</button>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-    data:()=>{
+  data:()=>{
     return {
-      user:[],
       userName:'',
       Password:''
     }
   },
+  created: function(){
+    this.userName = localStorage.getItem('usr')
+    this.Password = localStorage.getItem('pwd')
+  },
   mounted: function(){
-    // const header = {
-    //     username
-    //     password
-    // }
     axios.get('http://localhost:3000/user')
     .then(result=>{
       this.user = result.data
@@ -33,8 +34,14 @@ export default {
   },
   methods:{
     loginMasuk: function(){
-        let loginUser = {username: this.userName, password: this.Password}
-        axios.post('http://localhost:3000/userAuth',loginUser)
+        localStorage.setItem('usr', this.userName)
+        localStorage.setItem('pwd', this.Password)
+    },
+    logout:function(){
+      localStorage.removeItem('usr')
+      localStorage.removeItem('pwd')
+      this.userName = ""
+      this.Password = ""
     }
   }
 }

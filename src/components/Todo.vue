@@ -21,21 +21,30 @@ export default{
       myText:''
     }
   },
-  mounted: function(){
-    axios.get('http://localhost:3000/todo')
+  created: function(){
+    const username = localStorage.getItem('usr')
+    const password = localStorage.getItem('pwd')
+    axios.get('http://localhost:3000/todo',{headers:{username,password}})
     .then(result=>{
       this.todos = result.data
-      // alert(JSON.stringify(result.data))
     })
   },
   methods:{
     tambahkan: function(){
+      const username = localStorage.getItem('usr')
+      const password = localStorage.getItem('pwd')
       let newItem = {catatan: this.myText}
-      axios.post('http://localhost:3000/todo', newItem)
-      this.todos.push(newItem)
+      axios.post('http://localhost:3000/todo', newItem, {headers:{username,password}})
+      .then(()=>{
+          this.todos.push(newItem)
+          this.myText=""
+      })
+      
     },
     hapus:function(id,idx){
-      axios.delete(`http://localhost:3000/todo/${id}`);
+      const username = localStorage.getItem('usr')
+      const password = localStorage.getItem('pwd')
+      axios.delete(`http://localhost:3000/todo/${id}`,{headers:{username,password}});
       this.todos.splice(idx,1);
     }
   }
